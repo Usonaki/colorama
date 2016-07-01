@@ -7,10 +7,10 @@
 from __future__ import print_function
 import sys
 
-# Add parent dir to sys path, so the following 'import colorama' always finds
-# the local source in preference to any installed version of colorama.
+# Add parent dir to sys path, so the following 'import colormania' always finds
+# the local source in preference to any installed version of colormania.
 import fixpath
-from colorama import init, Fore, Back, Style
+from colormania import init, Fore, Back, Style
 
 init()
 
@@ -46,3 +46,5 @@ for background in BACKS:
     print(Style.RESET_ALL)
 
 print()
+
+input('Press ENTER to quit')

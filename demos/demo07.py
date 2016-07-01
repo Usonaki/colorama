@@ -1,13 +1,13 @@
 from __future__ import print_function
 import fixpath
-import colorama
+import colormania
 
-# Demonstrate cursor relative movement: UP, DOWN, FORWARD, and BACK in colorama.CURSOR
+# Demonstrate cursor relative movement: UP, DOWN, FORWARD, and BACK in colormania.CURSOR
 
-up = colorama.Cursor.UP
-down = colorama.Cursor.DOWN
-forward = colorama.Cursor.FORWARD
-back = colorama.Cursor.BACK
+up = colormania.Cursor.UP
+down = colormania.Cursor.DOWN
+forward = colormania.Cursor.FORWARD
+back = colormania.Cursor.BACK
 
 def main():
     """
@@ -16,7 +16,7 @@ def main():
     aba
     3a4
     """
-    colorama.init()
+    colormania.init()
     print("aaa")
     print("aaa")
     print("aaa")
@@ -25,3 +25,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    input('Press ENTER to quit')

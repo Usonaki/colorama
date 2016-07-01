@@ -1,8 +1,8 @@
 # Copyright Jonathan Hartley 2013. BSD 3-Clause license, see LICENSE file.
 from __future__ import print_function
 import fixpath
-import colorama
-from colorama import Fore, Back, Style
+import colormania
+from colormania import Fore, Back, Style
 from random import randint, choice
 from string import printable
 
@@ -24,7 +24,7 @@ CHARS = ' ' + printable.strip()
 PASSES = 1000
 
 def main():
-    colorama.init()
+    colormania.init()
     # gratuitous use of lambda.
     pos = lambda y, x: '\x1b[%d;%dH' % (y, x)
     # draw a white border.
@@ -41,3 +41,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    input('Press ENTER to quit')

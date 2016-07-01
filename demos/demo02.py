@@ -5,7 +5,7 @@
 
 from __future__ import print_function
 import fixpath
-from colorama import init, Fore, Back, Style
+from colormania import init, Fore, Back, Style
 
 init()
 
@@ -23,3 +23,4 @@ print(Style.DIM + 'dim, '
     , end=' ')
 print()
 
+input('Press ENTER to quit')
