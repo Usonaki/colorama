@@ -5,9 +5,12 @@ try:
 except ImportError:
     from unittest import TestCase, main
 
-from ..ansi import Fore, Back, Style
-from ..ansitowin32 import AnsiToWin32
-
+try:
+    from ..ansi import Fore, Back, Style
+    from ..ansitowin32 import AnsiToWin32
+except SystemError:
+    from colormania.ansi import Fore, Back, Style
+    from colormania.ansitowin32 import AnsiToWin32
 
 stdout_orig = sys.stdout
 stderr_orig = sys.stderr

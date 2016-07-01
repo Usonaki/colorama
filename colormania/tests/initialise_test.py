@@ -7,10 +7,15 @@ except ImportError:
 
 from mock import patch
 
-from .utils import osname, redirected_output, replace_by_none
+try:
+    from .utils import osname, redirected_output, replace_by_none
+    from ..initialise import init
+    from ..ansitowin32 import StreamWrapper
+except SystemError:
+    from colormania.tests.utils import osname, redirected_output, replace_by_none
+    from colormania.initialise import init
+    from colormania.ansitowin32 import StreamWrapper
 
-from ..initialise import init
-from ..ansitowin32 import StreamWrapper
 import os
 
 orig_stdout = sys.stdout
@@ -39,15 +44,15 @@ class InitTest(TestCase):
         self.assertIs(sys.stdout, orig_stdout, 'stdout should not be wrapped')
         self.assertIs(sys.stderr, orig_stderr, 'stderr should not be wrapped')
 
-    @patch('colorama.initialise.reset_all')
-    @patch('colorama.ansitowin32.winapi_test', lambda *_: True)
+    @patch('colormania.initialise.reset_all')
+    @patch('colormania.ansitowin32.winapi_test', lambda *_: True)
     def testInitWrapsOnWindows(self, _):
         with osname("nt"):
             init()
             self.assertWrapped()
 
-    @patch('colorama.initialise.reset_all')
-    @patch('colorama.ansitowin32.winapi_test', lambda *_: False)
+    @patch('colormania.initialise.reset_all')
+    @patch('colormania.ansitowin32.winapi_test', lambda *_: False)
     def testInitDoesntWrapOnEmulatedWindows(self, _):
         with osname("nt"):
             init()
@@ -79,16 +84,16 @@ class InitTest(TestCase):
     def testInitWrapOffIncompatibleWithAutoresetOn(self):
         self.assertRaises(ValueError, lambda: init(autoreset=True, wrap=False))
 
-    @patch('colorama.ansitowin32.winterm', None)
-    @patch('colorama.ansitowin32.winapi_test', lambda *_: True)
+    @patch('colormania.ansitowin32.winterm', None)
+    @patch('colormania.ansitowin32.winapi_test', lambda *_: True)
     def testInitOnlyWrapsOnce(self):
         with osname("nt"):
             init()
             init()
             self.assertWrapped()
 
-    @patch('colorama.win32.SetConsoleTextAttribute')
-    @patch('colorama.initialise.AnsiToWin32')
+    @patch('colormania.win32.SetConsoleTextAttribute')
+    @patch('colormania.initialise.AnsiToWin32')
     def testAutoResetPassedOn(self, mockATW32, _):
         with osname("nt"):
             init(autoreset=True)
@@ -96,7 +101,7 @@ class InitTest(TestCase):
             self.assertEqual(mockATW32.call_args_list[1][1]['autoreset'], True)
             self.assertEqual(mockATW32.call_args_list[0][1]['autoreset'], True)
 
-    @patch('colorama.initialise.AnsiToWin32')
+    @patch('colormania.initialise.AnsiToWin32')
     def testAutoResetChangeable(self, mockATW32):
         with osname("nt"):
             init()
@@ -114,7 +119,7 @@ class InitTest(TestCase):
                 mockATW32.call_args_list[5][1]['autoreset'], False)
 
 
-    @patch('colorama.initialise.atexit.register')
+    @patch('colormania.initialise.atexit.register')
     def testAtexitRegisteredOnlyOnce(self, mockRegister):
         init()
         self.assertTrue(mockRegister.called)

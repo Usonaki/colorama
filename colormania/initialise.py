@@ -5,7 +5,6 @@ import sys
 
 from .ansitowin32 import AnsiToWin32
 
-
 orig_stdout = None
 orig_stderr = None
 
@@ -46,6 +45,9 @@ def init(autoreset=False, convert=None, strip=None, wrap=True):
     if not atexit_done:
         atexit.register(reset_all)
         atexit_done = True
+
+    from .color import Shades
+    Shades._test_chars()
 
 
 def deinit():

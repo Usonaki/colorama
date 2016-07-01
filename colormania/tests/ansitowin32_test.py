@@ -15,12 +15,14 @@ except ImportError:
 
 from mock import Mock, patch
 
-from .utils import osname
-
-from ..ansi import Style
-from ..ansitowin32 import AnsiToWin32, StreamWrapper
-
-
+try:
+    from .utils import osname
+    from ..ansi import Style
+    from ..ansitowin32 import AnsiToWin32, StreamWrapper
+except SystemError:
+    from colormania.tests.utils import osname
+    from colormania.ansi import Style
+    from colormania.ansitowin32 import AnsiToWin32, StreamWrapper
 
 class StreamWrapperTest(TestCase):
 
@@ -46,8 +48,8 @@ class AnsiToWin32Test(TestCase):
         self.assertEqual(stream.wrapped, mockStdout)
         self.assertEqual(stream.autoreset, auto)
 
-    @patch('colorama.ansitowin32.winterm', None)
-    @patch('colorama.ansitowin32.winapi_test', lambda *_: True)
+    @patch('colormania.ansitowin32.winterm', None)
+    @patch('colormania.ansitowin32.winapi_test', lambda *_: True)
     def testStripIsTrueOnWindows(self):
         with osname('nt'):
             mockStdout = Mock()

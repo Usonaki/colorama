@@ -1,5 +1,6 @@
 # Copyright Jonathan Hartley 2013. BSD 3-Clause license, see LICENSE file.
 from . import win32
+import os
 
 
 # from wincon.h
@@ -32,6 +33,8 @@ class WinTerm(object):
         # we track them separately, since LIGHT_EX is overwritten by Fore/Back
         # and BRIGHT is overwritten by Style codes.
         self._light = 0
+        on_windows = os.name == 'nt'
+        self.global_supported = on_windows and win32.winapi_test()
 
     def get_attrs(self):
         return self._fore + self._back * 16 + (self._style | self._light)
@@ -44,6 +47,9 @@ class WinTerm(object):
     def reset_all(self, on_stderr=None):
         self.set_attrs(self._default)
         self.set_console(attrs=self._default)
+
+    def reset_global(self, on_stderr=None):
+        self.set_global_color(attrs=self._default)
 
     def fore(self, fore=None, light=False, on_stderr=False):
         if fore is None:
@@ -81,7 +87,31 @@ class WinTerm(object):
             handle = win32.STDERR
         win32.SetConsoleTextAttribute(handle, attrs)
 
-    def get_position(self, handle):
+    def set_global_color(self, attrs=None, on_stderr=False):
+        if not self.global_supported: return
+        if attrs is None:
+            attrs = self.get_attrs()
+        handle = win32.STDOUT
+        if on_stderr:
+            handle = win32.STDERR
+        csbi = win32.GetConsoleScreenBufferInfoEx()
+        csbi.wAttributes = attrs
+        csbi.srWindow.Right += 1  # otherwise the window will shrink
+        csbi.srWindow.Bottom += 1
+        win32.SetConsoleScreenBufferInfoEx(csbi)
+
+    def get_global_color(self, on_stderr=False):
+        if not self.global_supported: return
+        handle = win32.STDOUT
+        if on_stderr:
+            handle = win32.STDERR
+        csbi = win32.GetConsoleScreenBufferInfoEx()
+        return csbi.wAttributes
+
+    def get_cursor_position(self, on_stderr=False):
+        handle = win32.STDOUT
+        if on_stderr:
+            handle = win32.STDERR
         position = win32.GetConsoleScreenBufferInfo(handle).dwCursorPosition
         # Because Windows coordinates are 0-based,
         # and win32.SetConsoleCursorPosition expects 1-based.
@@ -103,9 +133,9 @@ class WinTerm(object):
         handle = win32.STDOUT
         if on_stderr:
             handle = win32.STDERR
-        position = self.get_position(handle)
+        position = self.get_cursor_position()
         adjusted_position = (position.Y + y, position.X + x)
-        win32.SetConsoleCursorPosition(handle, adjusted_position, adjust=False)
+        win32.SetConsoleCursorPosition(handle, adjusted_position)
 
     def erase_screen(self, mode=0, on_stderr=False):
         # 0 should clear from the cursor to the end of the screen.
