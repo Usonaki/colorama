@@ -11,7 +11,7 @@ except ImportError:
     from distutils.core import setup
 
 
-NAME = 'colorama'
+NAME = 'colormania'
 
 
 def get_long_description(filename):
@@ -36,14 +36,14 @@ def get_version(path):
 
 setup(
     name=NAME,
-    version=get_version(os.path.join('colorama', '__init__.py')),
+    version=get_version(os.path.join('colormania', '__init__.py')),
     description='Cross-platform colored terminal text.',
     long_description=read_file('README.rst'),
     keywords='color colour terminal text ansi windows crossplatform xplatform',
     author='Jonathan Hartley',
     author_email='tartley@tartley.com',
     maintainer='Arnon Yaari',
-    url='https://github.com/tartley/colorama',
+    url='https://github.com/tartley/colormania',
     license='BSD',
     packages=[NAME],
     # see classifiers http://pypi.python.org/pypi?%3Aaction=list_classifiers
